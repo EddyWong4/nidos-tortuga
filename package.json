@@ -1,7 +1,7 @@
 {
   "name": "nidos-tortuga",
   "private": true,
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "PWA offline-first para el registro de nidos de tortuga marina",
   "type": "module",
   "engines": {

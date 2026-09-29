@@ -7,7 +7,7 @@
     </ion-header>
 
     <ion-content>
-      <ion-list v-if="perfil">
+      <ion-list v-if="perfil" inset>
         <ion-list-header>
           <ion-label>Perfil</ion-label>
         </ion-list-header>
@@ -32,7 +32,7 @@
         </ion-item>
       </ion-list>
 
-      <ion-list>
+      <ion-list inset>
         <ion-list-header>
           <ion-label>Este teléfono</ion-label>
         </ion-list-header>
@@ -56,7 +56,7 @@
         </ion-item>
       </ion-list>
 
-      <ion-list>
+      <ion-list inset>
         <ion-list-header>
           <ion-label>Acerca de</ion-label>
         </ion-list-header>

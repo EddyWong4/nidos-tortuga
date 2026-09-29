@@ -9,154 +9,135 @@
       </ion-toolbar>
     </ion-header>
 
-    <ion-content class="ion-padding">
-      <div class="campo">
-        <ion-input
-          v-model="form.fechaEmergencia"
-          type="date"
-          label="Fecha de emergencia"
-          label-placement="stacked"
-          fill="outline"
-          :min="fechaMuestreo"
-          :max="hoy"
-          :class="{ 'ion-invalid ion-touched': errores.fechaEmergencia }"
-        />
-        <CampoError :mensaje="errores.fechaEmergencia" />
-      </div>
+    <ion-content ref="contenido" class="ion-padding">
+      <p class="intro">Llénalo después de la emergencia. Puedes guardar aunque falten datos y completarlo luego.</p>
 
-      <div class="fila">
-        <div class="campo">
-          <ion-input
+      <TarjetaSeccion titulo="Emergencia" :icono="calendarOutline">
+        <CampoForm
+          etiqueta="Fecha de emergencia"
+          :ayuda="fechaMuestreo ? `Muestreo: ${fechaCorta(fechaMuestreo)}` : undefined"
+          :error="errores.fechaEmergencia"
+        >
+          <EntradaTexto
+            v-model="form.fechaEmergencia"
+            etiqueta="Fecha de emergencia"
+            tipo="date"
+            :minimo="fechaMuestreo"
+            :maximo-fecha="hoy"
+            :invalido="!!errores.fechaEmergencia"
+          />
+        </CampoForm>
+      </TarjetaSeccion>
+
+      <TarjetaSeccion titulo="Huevos" :icono="eggOutline">
+        <CampoForm etiqueta="Eclosionados" :error="errores.huevosEclosionados">
+          <EntradaNumero
             v-model="form.huevosEclosionados"
-            label="Eclosionados"
-            label-placement="stacked"
-            fill="outline"
-            inputmode="numeric"
-            :class="{ 'ion-invalid ion-touched': errores.huevosEclosionados }"
+            etiqueta="Huevos eclosionados"
+            :minimo="0"
+            :maximo="250"
+            :invalido="!!errores.huevosEclosionados"
           />
-          <CampoError :mensaje="errores.huevosEclosionados" />
-        </div>
-        <div class="campo">
-          <ion-input
+        </CampoForm>
+        <CampoForm etiqueta="Sin desarrollo" :error="errores.huevosSinDesarrollo">
+          <EntradaNumero
             v-model="form.huevosSinDesarrollo"
-            label="Sin desarrollo"
-            label-placement="stacked"
-            fill="outline"
-            inputmode="numeric"
-            :class="{ 'ion-invalid ion-touched': errores.huevosSinDesarrollo }"
+            etiqueta="Huevos sin desarrollo"
+            :minimo="0"
+            :maximo="250"
+            :invalido="!!errores.huevosSinDesarrollo"
           />
-          <CampoError :mensaje="errores.huevosSinDesarrollo" />
-        </div>
-      </div>
-
-      <div class="campo">
-        <ion-input
-          v-model="form.huevosConDesarrolloAparente"
-          label="Con desarrollo aparente"
-          label-placement="stacked"
-          fill="outline"
-          inputmode="numeric"
-          :class="{ 'ion-invalid ion-touched': errores.huevosConDesarrolloAparente }"
-        />
-        <CampoError :mensaje="errores.huevosConDesarrolloAparente" />
-      </div>
-
-      <div class="fila">
-        <div class="campo">
-          <ion-input
-            v-model="form.criasVivas"
-            label="Crías vivas"
-            label-placement="stacked"
-            fill="outline"
-            inputmode="numeric"
-            :class="{ 'ion-invalid ion-touched': errores.criasVivas }"
+        </CampoForm>
+        <CampoForm etiqueta="Con desarrollo aparente" :error="errores.huevosConDesarrolloAparente">
+          <EntradaNumero
+            v-model="form.huevosConDesarrolloAparente"
+            etiqueta="Huevos con desarrollo aparente"
+            :minimo="0"
+            :maximo="250"
+            :invalido="!!errores.huevosConDesarrolloAparente"
           />
-          <CampoError :mensaje="errores.criasVivas" />
+        </CampoForm>
+      </TarjetaSeccion>
+
+      <TarjetaSeccion titulo="Resultados" subtitulo="Se calculan solos mientras escribes." :icono="calculatorOutline">
+        <div class="resultados">
+          <div class="resultado resultado--destacado">
+            <span class="resultado-valor">{{ valor(derivados.exitoEclosion, ' %') }}</span>
+            <span class="resultado-etiqueta">Éxito de eclosión</span>
+          </div>
+          <div class="resultado">
+            <span class="resultado-valor">{{ valor(derivados.totalHuevos) }}</span>
+            <span class="resultado-etiqueta">Total de huevos</span>
+          </div>
+          <div class="resultado">
+            <span class="resultado-valor">{{ valor(derivados.huevosNoEclosionados) }}</span>
+            <span class="resultado-etiqueta">No eclosionados</span>
+          </div>
+          <div class="resultado">
+            <span class="resultado-valor">{{ valor(derivados.periodoIncubacion) }}</span>
+            <span class="resultado-etiqueta">Días de incubación</span>
+          </div>
         </div>
-        <div class="campo">
-          <ion-input
-            v-model="form.criasMuertas"
-            label="Crías muertas"
-            label-placement="stacked"
-            fill="outline"
-            inputmode="numeric"
-            :class="{ 'ion-invalid ion-touched': errores.criasMuertas }"
+      </TarjetaSeccion>
+
+      <TarjetaSeccion titulo="Crías" :icono="heartOutline">
+        <div class="fila">
+          <CampoForm etiqueta="Vivas" :error="errores.criasVivas">
+            <EntradaTexto
+              v-model="form.criasVivas"
+              etiqueta="Crías vivas"
+              teclado="numeric"
+              ejemplo="0"
+              :invalido="!!errores.criasVivas"
+            />
+          </CampoForm>
+          <CampoForm etiqueta="Muertas" :error="errores.criasMuertas">
+            <EntradaTexto
+              v-model="form.criasMuertas"
+              etiqueta="Crías muertas"
+              teclado="numeric"
+              ejemplo="0"
+              :invalido="!!errores.criasMuertas"
+            />
+          </CampoForm>
+        </div>
+      </TarjetaSeccion>
+
+      <TarjetaSeccion titulo="Estado del nido" :icono="clipboardOutline">
+        <CampoForm v-slot="{ idEtiqueta }" etiqueta="Estatus del análisis">
+          <SelectorOpciones
+            v-model="form.estatusAnalisis"
+            :opciones="catalogos.estatusAnalisis"
+            :etiquetado-por="idEtiqueta"
+            :columnas="2"
           />
-          <CampoError :mensaje="errores.criasMuertas" />
-        </div>
-      </div>
-
-      <div class="calculados">
-        <div>
-          <span class="numero">{{ valor(derivados.huevosNoEclosionados) }}</span>
-          <span class="etiqueta">No eclosionados</span>
-        </div>
-        <div>
-          <span class="numero">{{ valor(derivados.totalHuevos) }}</span>
-          <span class="etiqueta">Total</span>
-        </div>
-        <div>
-          <span class="numero">{{ valor(derivados.exitoEclosion, '%') }}</span>
-          <span class="etiqueta">Éxito</span>
-        </div>
-        <div>
-          <span class="numero">{{ valor(derivados.periodoIncubacion) }}</span>
-          <span class="etiqueta">Días incubación</span>
-        </div>
-      </div>
-
-      <div class="campo">
-        <ion-select
-          v-model="form.estatusAnalisis"
-          label="Estatus del análisis"
-          label-placement="stacked"
-          fill="outline"
-          placeholder="Selecciona"
-          interface="action-sheet"
-          cancel-text="Cancelar"
-          :interface-options="{ header: 'Estatus del análisis' }"
-        >
-          <ion-select-option v-for="v in catalogos.estatusAnalisis" :key="v" :value="v">{{ v }}</ion-select-option>
-        </ion-select>
-      </div>
-
-      <div class="campo">
-        <ion-select
-          v-model="form.perdidaNidada"
-          label="Pérdida de nidada"
-          label-placement="stacked"
-          fill="outline"
-          placeholder="Ninguna"
-          interface="action-sheet"
-          cancel-text="Cancelar"
-          :interface-options="{ header: 'Pérdida de nidada' }"
-        >
-          <ion-select-option value="">Ninguna</ion-select-option>
-          <ion-select-option v-for="v in catalogos.perdidaNidada" :key="v" :value="v">{{ v }}</ion-select-option>
-        </ion-select>
-      </div>
-
-      <div class="campo">
-        <ion-textarea
-          v-model="form.observacionesNido"
-          label="Observaciones del nido"
-          label-placement="stacked"
-          fill="outline"
-          :auto-grow="true"
-          :counter="true"
-          :maxlength="200"
-        />
-      </div>
+        </CampoForm>
+        <CampoForm v-slot="{ idEtiqueta }" etiqueta="Pérdida de nidada">
+          <SelectorOpciones
+            v-model="form.perdidaNidada"
+            :opciones="catalogos.perdidaNidada"
+            opcion-vacia="Ninguna"
+            :etiquetado-por="idEtiqueta"
+            :columnas="2"
+          />
+        </CampoForm>
+        <CampoForm etiqueta="Observaciones del nido" opcional>
+          <EntradaNotas
+            v-model="form.observacionesNido"
+            etiqueta="Observaciones del nido"
+            ejemplo="Depredadores, raíces, humedad…"
+          />
+        </CampoForm>
+      </TarjetaSeccion>
     </ion-content>
 
-    <ion-footer>
-      <ion-toolbar>
-        <div class="acciones">
-          <ion-button expand="block" color="success" :disabled="guardando" @click="guardar">
-            Guardar análisis
-          </ion-button>
-        </div>
-      </ion-toolbar>
+    <ion-footer class="pie">
+      <div class="acciones">
+        <ion-button expand="block" color="success" :disabled="guardando" @click="guardar">
+          <ion-icon slot="start" :icon="checkmarkCircle" />
+          Guardar análisis
+        </ion-button>
+      </div>
     </ion-footer>
   </ion-page>
 </template>
@@ -169,24 +150,34 @@ import {
   IonContent,
   IonFooter,
   IonHeader,
-  IonInput,
+  IonIcon,
   IonPage,
-  IonSelect,
-  IonSelectOption,
-  IonTextarea,
   IonTitle,
   IonToolbar,
   useIonRouter,
 } from '@ionic/vue';
-import { computed, onMounted, reactive, ref } from 'vue';
+import {
+  calculatorOutline,
+  calendarOutline,
+  checkmarkCircle,
+  clipboardOutline,
+  eggOutline,
+  heartOutline,
+} from 'ionicons/icons';
+import { computed, nextTick, onMounted, reactive, ref } from 'vue';
 import { useRoute } from 'vue-router';
-import CampoError from '@/components/CampoError.vue';
+import TarjetaSeccion from '@/components/TarjetaSeccion.vue';
+import CampoForm from '@/components/form/CampoForm.vue';
+import EntradaNotas from '@/components/form/EntradaNotas.vue';
+import EntradaNumero from '@/components/form/EntradaNumero.vue';
+import EntradaTexto from '@/components/form/EntradaTexto.vue';
+import SelectorOpciones from '@/components/form/SelectorOpciones.vue';
 import { avisar } from '@/composables/useAviso';
 import { useBorrador } from '@/composables/useBorrador';
 import { useCatalogos } from '@/composables/useCatalogos';
 import { db } from '@/db/database';
 import { actualizarNido } from '@/db/repositorio';
-import { hoyISO, valor } from '@/domain/formato';
+import { fechaCorta, hoyISO, valor } from '@/domain/formato';
 import { analisisAFormulario, numerosAnalisis, validarAnalisis, type FormAnalisis } from '@/domain/formulario';
 import { calcularDerivados } from '@/domain/formulas';
 import { analisisVacio } from '@/domain/schemas';
@@ -202,6 +193,7 @@ const fechaMuestreo = ref('');
 const form = reactive<FormAnalisis>(analisisAFormulario(analisisVacio()));
 const intentado = ref(false);
 const guardando = ref(false);
+const contenido = ref<InstanceType<typeof IonContent> | null>(null);
 
 const errores = computed(() => (intentado.value ? validarAnalisis(form, fechaMuestreo.value).errores : {}));
 
@@ -234,7 +226,13 @@ onMounted(async () => {
 async function guardar() {
   intentado.value = true;
   const { datos } = validarAnalisis(form, fechaMuestreo.value);
-  if (!datos) return;
+  if (!datos) {
+    await nextTick();
+    (contenido.value?.$el as HTMLElement | undefined)
+      ?.querySelector('.campo--error')
+      ?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return;
+  }
   guardando.value = true;
   try {
     await actualizarNido(id, { analisis: datos });
@@ -252,40 +250,56 @@ async function guardar() {
 </script>
 
 <style scoped>
-.campo {
-  margin-bottom: 16px;
-  flex: 1;
-  min-width: 0;
+.intro {
+  margin: 0 2px 14px;
+  color: var(--app-texto-suave);
+  font-size: 0.95rem;
 }
 .fila {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 12px;
 }
-.calculados {
+.resultados {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 6px;
-  margin-bottom: 16px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
 }
-.calculados div {
+.resultado {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  padding: 10px 2px;
-  border-radius: 8px;
-  background: var(--ion-color-light);
-  text-align: center;
+  gap: 2px;
+  padding: 12px;
+  border-radius: 12px;
+  background: var(--ion-background-color);
 }
-.numero {
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: var(--ion-color-primary);
+.resultado--destacado {
+  grid-column: 1 / -1;
+  background: var(--app-primario-suave);
 }
-.etiqueta {
-  font-size: 0.75rem;
-  color: var(--ion-color-medium-shade);
+.resultado-valor {
+  font-size: 1.5rem;
+  font-weight: 750;
+  color: var(--app-texto);
+}
+.resultado--destacado .resultado-valor {
+  font-size: 2rem;
+  color: var(--ion-color-primary-shade);
+}
+.resultado-etiqueta {
+  font-size: 0.85rem;
+  color: var(--app-texto-suave);
+}
+.pie {
+  background: #ffffff;
+  box-shadow: 0 -1px 0 var(--app-borde-suave);
 }
 .acciones {
-  padding: 8px 16px;
+  padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
+}
+.acciones ion-button {
+  margin: 0;
+  min-height: 52px;
+  font-size: 1.05rem;
 }
 </style>

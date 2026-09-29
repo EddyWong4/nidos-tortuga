@@ -1,20 +1,104 @@
-/* Paleta del campamento: verde azulado del mar. Alto contraste para leer bajo el sol. */
+/*
+ * Tema claro de alto contraste: la app se usa en la playa, a pleno sol.
+ * Todo color de la interfaz sale de estas variables.
+ */
 :root {
+  color-scheme: light;
+
   --ion-color-primary: #0f766e;
   --ion-color-primary-rgb: 15, 118, 110;
   --ion-color-primary-contrast: #ffffff;
   --ion-color-primary-contrast-rgb: 255, 255, 255;
-  --ion-color-primary-shade: #0d6861;
-  --ion-color-primary-tint: #27847d;
+  --ion-color-primary-shade: #0b5f59;
+  --ion-color-primary-tint: #14857c;
+
+  --ion-color-success: #15803d;
+  --ion-color-success-rgb: 21, 128, 61;
+  --ion-color-success-contrast: #ffffff;
+  --ion-color-success-contrast-rgb: 255, 255, 255;
+  --ion-color-success-shade: #126f35;
+  --ion-color-success-tint: #2c8d51;
+
+  --ion-color-warning: #b45309;
+  --ion-color-warning-rgb: 180, 83, 9;
+  --ion-color-warning-contrast: #ffffff;
+  --ion-color-warning-contrast-rgb: 255, 255, 255;
+  --ion-color-warning-shade: #9e4908;
+  --ion-color-warning-tint: #bc6422;
+
+  --ion-color-danger: #b91c1c;
+  --ion-color-danger-rgb: 185, 28, 28;
+  --ion-color-danger-contrast: #ffffff;
+  --ion-color-danger-contrast-rgb: 255, 255, 255;
+  --ion-color-danger-shade: #a31919;
+  --ion-color-danger-tint: #c03333;
 
   --ion-font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --ion-background-color: #f2f5f4;
+  --ion-background-color-rgb: 242, 245, 244;
+  --ion-text-color: #17211f;
+  --ion-text-color-rgb: 23, 33, 31;
+  --ion-toolbar-background: #ffffff;
+  --ion-item-background: #ffffff;
+  --ion-tab-bar-background: #ffffff;
+  --ion-tab-bar-color: #5b6b67;
+  --ion-tab-bar-color-selected: var(--ion-color-primary);
+
+  /* Propias de la app */
+  --app-tarjeta: #ffffff;
+  --app-borde: #b9c6c2;
+  --app-borde-suave: #dde5e2;
+  --app-texto: #17211f;
+  --app-texto-suave: #52615d;
+  --app-primario-suave: #e3f2ef;
+  --app-aviso-suave: #fdf1e3;
+  --app-error-suave: #fdecec;
+  --app-exito-suave: #e6f4ea;
+  --app-radio: 14px;
+  --app-sombra: 0 1px 2px rgba(16, 40, 36, 0.06), 0 2px 8px rgba(16, 40, 36, 0.06);
+}
+
+body {
+  color: var(--app-texto);
 }
 
 /* Objetivos táctiles de al menos 48 px, para usar con una mano en la playa. */
 ion-button {
   min-height: 48px;
+  --border-radius: 12px;
+  text-transform: none;
+  letter-spacing: 0;
+  font-weight: 600;
 }
 
 ion-item {
   --min-height: 52px;
+}
+
+ion-tab-bar {
+  height: 64px;
+  border-top: 1px solid var(--app-borde-suave);
+}
+
+ion-tab-button {
+  --padding-top: 6px;
+  --padding-bottom: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+ion-tab-button ion-icon {
+  font-size: 1.5rem;
+}
+
+ion-toolbar ion-title {
+  font-weight: 700;
+}
+
+/* Tarjeta base reutilizable */
+.tarjeta {
+  background: var(--app-tarjeta);
+  border-radius: var(--app-radio);
+  box-shadow: var(--app-sombra);
+  border: 1px solid var(--app-borde-suave);
 }
