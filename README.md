@@ -1,8 +1,20 @@
 # Nidos de Tortuga
 
-PWA *offline-first* para registrar nidos de tortuga marina en campo. Funciona 100% sin internet en Android e iOS, y está preparada para enviar los datos a un servidor en el futuro.
+PWA *offline-first* para registrar nidos de tortuga marina en campo. Funciona 100% sin internet en Android e iOS. Los datos se juntan con archivos en el modo coordinador o, opcionalmente, con un servidor propio.
 
-Plan del proyecto: https://claude.ai/code/artifact/e7b67c7b-d382-4ccd-b060-474737fed811
+- **App:** https://eddywong4.github.io/nidos-tortuga/
+- **Guía para observadores:** [docs/GUIA_INSTALACION.md](docs/GUIA_INSTALACION.md)
+- **Plan del piloto:** [docs/PILOTO.md](docs/PILOTO.md)
+- **Servidor opcional:** [server/README.md](server/README.md)
+- **Plan del proyecto:** https://claude.ai/code/artifact/e7b67c7b-d382-4ccd-b060-474737fed811
+
+## Cómo viajan los datos
+
+```
+Observador ──"Entregar datos"──► archivo .txt por WhatsApp/correo ──► Coordinador (importa, consolida, Excel)
+     │
+     └──(opcional, con señal)──► Servidor (API + PostgreSQL) — mismas reglas de consolidación
+```
 
 ## Requisitos
 
@@ -45,13 +57,15 @@ MSYS_NO_PATHCONV=1 BASE_PATH=/nidos-tortuga/ npx vite preview
 
 ```
 src/
-  domain/        Reglas del negocio sin interfaz: esquemas Zod, fórmulas, folio, catálogos
+  domain/        Reglas del negocio sin interfaz: esquemas Zod, fórmulas, folio, catálogos, consolidación
   db/            Base local Dexie (IndexedDB) y repositorio con la cola outbox
-  sync/          Interfaz SyncAdapter (exportar archivos hoy, API mañana)
-  composables/   Instalación PWA, almacenamiento persistente, consultas en vivo
-  components/    Avisos de instalación y de nueva versión
+  sync/          Paquetes, entrega por archivo, importación, respaldos, reportes, cliente del servidor
+  composables/   Instalación PWA, GPS, borradores, almacenamiento persistente, consultas en vivo
+  components/    Componentes de formulario, tarjetas, pasos y avisos
   views/         Pantallas (Ionic)
-  theme/         Colores y tamaños táctiles
+  theme/         Tema claro de alto contraste
+server/          API opcional (Fastify + PostgreSQL); usa src/domain y src/sync/paquete.ts
+docs/            Guía de instalación y plan del piloto
 ```
 
 ## Decisiones clave
@@ -67,7 +81,7 @@ src/
 
 - [x] Fase 1 · Base: proyecto, PWA instalable, base local, fórmulas y validaciones con pruebas, CI
 - [x] Fase 2 · Captura (MVP): perfil del teléfono, formulario de 3 pasos con GPS y borradores, lista con búsqueda y filtros, detalle, edición, análisis y borrado lógico
-- [ ] Fase 3 · Modo coordinador
-- [ ] Fase 4 · Despliegue
-- [ ] Fase 5 · Piloto
-- [ ] Fase 6 · Servidor y sincronización
+- [x] Fase 3 · Modo coordinador: entrega por archivo, importación y consolidación, conflictos (incluido "conservar los dos"), reportes Excel/CSV, respaldos diarios y restauración
+- [x] Fase 4 · Despliegue: GitHub Pages con CI, guía de instalación en la app y en `docs/`, QR para compartir
+- [ ] Fase 5 · Piloto: plan listo en [docs/PILOTO.md](docs/PILOTO.md); falta hacerlo en campo
+- [x] Fase 6 · Servidor y sincronización: API, migraciones, tokens por teléfono, envío automático desde la app (apagado por defecto). Falta instalarlo en un servidor con HTTPS

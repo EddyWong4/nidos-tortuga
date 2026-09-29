@@ -43,6 +43,18 @@
           <ion-icon :icon="chevronForward" class="nuevo-flecha" aria-hidden="true" />
         </button>
 
+        <router-link v-if="conteos.porEntregar" to="/entrega" class="tarjeta entregar">
+          <ion-icon :icon="cloudUploadOutline" aria-hidden="true" />
+          <span>
+            <strong>Entregar datos</strong>
+            <small>
+              {{ conteos.porEntregar }} {{ conteos.porEntregar === 1 ? 'nido pendiente' : 'nidos pendientes' }} de enviar
+              al coordinador
+            </small>
+          </span>
+          <ion-icon :icon="chevronForward" aria-hidden="true" />
+        </router-link>
+
         <section v-if="alertas.length" class="alertas">
           <h2>
             <ion-icon :icon="notificationsOutline" aria-hidden="true" />
@@ -225,6 +237,38 @@ const alertas = useLiveQuery(async () => proximosAEmerger(await db.nidos.toArray
 }
 .nuevo-flecha {
   font-size: 1.4rem;
+}
+.entregar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 12px;
+  padding: 14px;
+  text-decoration: none;
+  color: var(--app-texto);
+  border-left: 5px solid var(--ion-color-warning);
+}
+.entregar > ion-icon:first-child {
+  flex: none;
+  font-size: 1.8rem;
+  color: var(--ion-color-warning);
+}
+.entregar > ion-icon:last-child {
+  color: var(--app-borde);
+  font-size: 1.3rem;
+}
+.entregar span {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.entregar strong {
+  font-size: 1.05rem;
+}
+.entregar small {
+  color: var(--app-texto-suave);
+  font-size: 0.85rem;
 }
 .alertas h2 {
   display: flex;

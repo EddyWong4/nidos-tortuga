@@ -11,6 +11,11 @@
           <ion-icon :icon="listOutline" aria-hidden="true" />
           <ion-label>Nidos</ion-label>
         </ion-tab-button>
+        <ion-tab-button v-if="esCoordinador" tab="coordinacion" href="/tabs/coordinacion">
+          <ion-icon :icon="peopleOutline" aria-hidden="true" />
+          <ion-label>Coordinación</ion-label>
+          <ion-badge v-if="conflictos" color="warning">{{ conflictos }}</ion-badge>
+        </ion-tab-button>
         <ion-tab-button tab="ajustes" href="/tabs/ajustes">
           <ion-icon :icon="settingsOutline" aria-hidden="true" />
           <ion-label>Ajustes</ion-label>
@@ -21,6 +26,14 @@
 </template>
 
 <script setup lang="ts">
-import { IonIcon, IonLabel, IonPage, IonRouterOutlet, IonTabBar, IonTabButton, IonTabs } from '@ionic/vue';
-import { homeOutline, listOutline, settingsOutline } from 'ionicons/icons';
+import { IonBadge, IonIcon, IonLabel, IonPage, IonRouterOutlet, IonTabBar, IonTabButton, IonTabs } from '@ionic/vue';
+import { homeOutline, listOutline, peopleOutline, settingsOutline } from 'ionicons/icons';
+import { computed } from 'vue';
+import { useLiveQuery } from '@/composables/useLiveQuery';
+import { db } from '@/db/database';
+import { usePerfilStore } from '@/stores/perfil';
+
+const store = usePerfilStore();
+const esCoordinador = computed(() => store.perfil?.rol === 'coordinador');
+const conflictos = useLiveQuery(() => db.conflictos.where('resuelto').equals(0).count(), 0);
 </script>

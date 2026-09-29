@@ -1,0 +1,41 @@
+# Servidor completo: PostgreSQL con PostGIS + API.
+#   cd server
+#   cp .env.ejemplo .env      (y cambia la clave)
+#   docker compose up -d --build
+#   docker compose exec api node_modules/.bin/tsx server/src/crearDispositivo.ts B07 "Ana López"
+#
+# La API queda en el puerto 3000 SIN cifrar: ponla detrás de HTTPS (ver README del servidor),
+# porque la app publicada en https:// no puede llamar a un servidor http://.
+
+services:
+  db:
+    image: postgis/postgis:16-3.4
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: nidos
+      POSTGRES_USER: nidos
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Define POSTGRES_PASSWORD en server/.env}
+    volumes:
+      - datos:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U nidos -d nidos']
+      interval: 5s
+      retries: 10
+
+  api:
+    build:
+      context: ..
+      dockerfile: server/Dockerfile
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgres://nidos:${POSTGRES_PASSWORD}@db:5432/nidos
+      POSTGIS: '1'
+      CORS_ORIGIN: ${CORS_ORIGIN:-https://eddywong4.github.io}
+    ports:
+      - '3000:3000'
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  datos:

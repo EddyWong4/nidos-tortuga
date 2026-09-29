@@ -27,6 +27,13 @@ jobs:
       - run: npm run typecheck
       - run: npm test
 
+      - name: Servidor (tipos y pruebas contra PostgreSQL en memoria)
+        working-directory: server
+        run: |
+          npm ci
+          npm run typecheck
+          npm test
+
       - name: Compilar para GitHub Pages
         run: npx vite build
         env:
